@@ -23,7 +23,26 @@ let AirportActionCreators = {
             type: constants.FETCH_AIRPORTS_SUCCESS,
             payload:{error}
         });
+    },
+    fetchTickets(){
+        AirCheapAPI.fetchTickets();
+        AppDispatcher.dispatch({
+            type:constants.FETCH_TICKETS
+        })
+    },
+    fetchTicketsSuccess(response){
+        AppDispatcher.dispatch({
+            type:constants.FETCH_TICKETS_SUCCESS,
+            payload:{response}
+        })
+    },
+    fetchTicketsError(err){
+        AppDispatcher.dispatch({
+            type:constants.FETCH_TICKETS_ERROR,
+            payload:{err}
+        });
     }
+
 }
 
 export default AirportActionCreators;

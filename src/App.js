@@ -7,6 +7,10 @@ import {Container} from 'flux/utils';
 import Autosuggest from 'react-autosuggest';
 import AirportStore from './stores/AirportStore';
 import AirportActionCreators from './actions/AirportActionCreators';
+import TicketStore from './stores/TicketStore';
+import TickItem from './components/TicketItem';
+
+
 
 class App extends Component{
     getSuggestions(input,callback){
@@ -20,9 +24,14 @@ class App extends Component{
 
     componentDidMount(){
         AirportActionCreators.fetchAirports();
+        AirportActionCreators.fetchTickets();
     }
 
     render(){
+        console.log(this.state.tickets);
+        let tickList = this.state.tickets.map((ticket)=>(
+            <TickItem key = {ticket.id} ticket={ticket}/>
+        ));
         return (
             <div>
                 <header>
@@ -31,20 +40,28 @@ class App extends Component{
                         <p>Check discount ticket price and pay using your AirCheap points</p>
                     </div>
                     <div className="header-route">
-                        <Autosuggest id="origin" inputAttributes = {{placeholder:'From'}} suggestions={this.getSuggestions.bind(this)}
-                        />
-                        <Autosuggest id="destination" inputAttributes = {{placeholder:'To'}} suggestions={this.getSuggestions.bind(this)}
-                        />
+                        <Autosuggest id='origin'
+                                     suggestions={this.getSuggestions.bind(this)}
+                                     inputAttributes={{placeholder:'From'}} />
+                        <Autosuggest id='destination'
+                                     suggestions={this.getSuggestions.bind(this)}
+                                     inputAttributes={{placeholder:'To'}} />
+
                     </div>
+
                 </header>
+                <div>
+                    {tickList}
+                </div>
             </div>
         )
     }
 }
 
-App.getStores = ()=>([AirportStore]);
+App.getStores = ()=>([AirportStore,TicketStore]);
 App.calculateState = (prevState) => ({
-    airports:AirportStore.getState()
+    airports:AirportStore.getState(),
+    tickets:TicketStore.getState()
 });
 
 const AppContainer = Container.create(App);

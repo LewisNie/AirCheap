@@ -1,19 +1,17 @@
 /**
- * Created by luyuann on 9/26/2016.
+ * Created by luyuann on 9/27/2016.
  */
 import AppDispatcher from '../AppDispatcher';
 import constants from '../constants';
 import {ReduceStore} from 'flux/utils';
 
-class AirportStore extends ReduceStore{
+class TicketStore extends ReduceStore{
     getInitialState(){
         return [];
     }
     reduce(state,action){
-        switch(action.type){
-            case constants.FETCH_TICKETS:
-                return [];
-            case constants.FETCH_AIRPORTS_SUCCESS:
+        switch (action.type){
+            case constants.FETCH_TICKETS_SUCCESS:
                 return action.payload.response;
             default:
                 return state;
@@ -21,4 +19,4 @@ class AirportStore extends ReduceStore{
     }
 }
 
-export default new AirportStore(AppDispatcher);
+export default new TicketStore(AppDispatcher);

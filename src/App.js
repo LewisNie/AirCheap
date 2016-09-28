@@ -9,7 +9,7 @@ import AirportStore from './stores/AirportStore';
 import AirportActionCreators from './actions/AirportActionCreators';
 import TicketStore from './stores/TicketStore';
 import TickItem from './components/TicketItem';
-
+import RouteStore from './stores/RouteStore';
 
 
 class App extends Component{
@@ -22,13 +22,26 @@ class App extends Component{
         callback(null,suggestions);
     }
 
+    handleSelect(target,suggestion,event){
+        const airportCodeRegex = /\(([^)]+)\)/;
+        let airportCode = airportCodeRegex.exec(suggestion)[1];
+        AirportActionCreators.chooseAirport(target,airportCode);
+    }
+
     componentDidMount(){
         AirportActionCreators.fetchAirports();
         AirportActionCreators.fetchTickets();
     }
 
+    componentWillUpdate(nextProps,nextState){
+        let originAndDestinationSelected = nextState.origin && nextState.destination;
+        let selectionHasChangedSinceLastUpdate = nextState.origin !== this.state.origin || nextState.destination !== this.state.destination;
+        if(originAndDestinationSelected && selectionHasChangedSinceLastUpdate){
+            AirportActionCreators.fetchTickets(nextState.origin,nextState.destination);
+        }
+    }
     render(){
-        console.log(this.state.tickets);
+        //console.log(this.state.tickets);
         let tickList = this.state.tickets.map((ticket)=>(
             <TickItem key = {ticket.id} ticket={ticket}/>
         ));
@@ -42,9 +55,13 @@ class App extends Component{
                     <div className="header-route">
                         <Autosuggest id='origin'
                                      suggestions={this.getSuggestions.bind(this)}
+                                     onSuggestionSelected={this.handleSelect.bind(this,'origin')}
+                                     value={this.state.origin}
                                      inputAttributes={{placeholder:'From'}} />
                         <Autosuggest id='destination'
                                      suggestions={this.getSuggestions.bind(this)}
+                                     onSuggestionSelected={this.handleSelect.bind(this,'destination')}
+                                     value={this.state.destination}
                                      inputAttributes={{placeholder:'To'}} />
 
                     </div>
@@ -58,9 +75,11 @@ class App extends Component{
     }
 }
 
-App.getStores = ()=>([AirportStore,TicketStore]);
+App.getStores = ()=>([AirportStore,RouteStore,TicketStore]);
 App.calculateState = (prevState) => ({
     airports:AirportStore.getState(),
+    origin:RouteStore.get('origin'),
+    destination:RouteStore.get('destination'),
     tickets:TicketStore.getState()
 });
 

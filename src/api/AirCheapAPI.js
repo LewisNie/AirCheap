@@ -7,23 +7,11 @@ import AirportActionCreators from '../actions/AirportActionCreators';
 let AirCheapApi = {
     fetchAirports(){
         fetch('airports.json')
-            .then((response)=>response.json())
-            .then((responseData) => {
-                AirportActionCreators.fetchAirportsSuccess(responseData);
-            })
-            .catch((error)=>{
-                AirportActionCreators.fetchAirportsError(error);
-            })
+            .then((response)=>response.json());
     },
-    fetchTickets(){
+    fetchTickets(origin,destination){
       fetch('flights.json')
-          .then((response)=>response.json())
-          .then((responseData)=>{
-                AirportActionCreators.fetchTicketsSuccess(responseData);
-          })
-          .catch((error)=>{
-                AirportActionCreators.fetchTicketsError(error);
-          })
+          .then((response)=>response.json());
     }
 }
 

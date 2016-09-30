@@ -30,7 +30,7 @@ class App extends Component{
 
     componentDidMount(){
         AirportActionCreators.fetchAirports();
-        AirportActionCreators.fetchTickets();
+        //AirportActionCreators.fetchTickets();
     }
 
     componentWillUpdate(nextProps,nextState){

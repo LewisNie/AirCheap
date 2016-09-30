@@ -14,7 +14,7 @@ let AirportActionCreators = {
      })
    },
 
-    fetchTickets(){
+    fetchTickets(origin,destination){
         AppDispatcher.dispatchAsync(AirCheapAPI.fetchTickets(origin,destination),{
             request: constants.FETCH_TICKETS,
             success: constants.FETCH_TICKETS_SUCCESS,
